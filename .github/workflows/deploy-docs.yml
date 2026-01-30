@@ -2,72 +2,72 @@ name: Deploy OpenAPI Docs
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
     paths:
       - "openapi.yaml"
       - ".github/workflows/deploy-docs.yml"
   workflow_dispatch:
 
+# Permissions required for GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
-  deployments: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-
-      - name: Create docs directory
-        run: mkdir -p docs
-
-      - name: Create index.html with ReDoc
+      # Verification step to ensure the file exists before we try to deploy
+      - name: Verify OpenAPI file exists
         run: |
-          cat > docs/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>API Documentation</title>
-              <meta name="description" content="API Documentation">
-              <style>
-                  body {
-                      margin: 0;
-                      padding: 0;
-                  }
-              </style>
-          </head>
-          <body>
-              <redoc spec-url='./openapi.yaml'></redoc>
-              <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
-          </body>
-          </html>
-          EOF
-
-      - name: Copy OpenAPI file to docs
-        run: cp openapi.yaml docs/
+          if [ ! -f openapi.yaml ]; then
+            echo "Error: openapi.yaml not found in root!"
+            ls -R
+            exit 1
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Prepare Docs folder
+        run: |
+          mkdir -p public
+          cp openapi.yaml public/
+
+          # Create index.html
+          cat > public/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>API Documentation</title>
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>body { margin: 0; padding: 0; }</style>
+          </head>
+          <body>
+            <redoc spec-url='./openapi.yaml'></redoc>
+            <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
+          </body>
+          </html>
+          EOF
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "docs"
+          path: "public" # Uploads the 'public' folder contents to the site root
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
