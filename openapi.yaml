@@ -1,0 +1,609 @@
+openapi: 3.0.0
+info:
+  title: Warehouse Management API
+  description: API for managing warehouses, products, and inventory
+  version: 1.0.0
+
+servers:
+  - url: https://api.warehouse.local/v1
+    description: Production server
+
+paths:
+  /warehouses:
+    get:
+      summary: List all warehouses
+      operationId: listWarehouses
+      tags:
+        - Warehouse
+      responses:
+        "200":
+          description: List of warehouses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Warehouse"
+              examples:
+                Example 1:
+                  value:
+                    - id: "WH001"
+                      name: "Main Warehouse"
+                      location: "Jakarta, Indonesia"
+                      capacity: 50000
+                      createdAt: "2024-01-15T10:30:00Z"
+                    - id: "WH002"
+                      name: "Secondary Warehouse"
+                      location: "Surabaya, Indonesia"
+                      capacity: 30000
+                      createdAt: "2024-02-20T14:45:00Z"
+    post:
+      summary: Create a new warehouse
+      operationId: createWarehouse
+      tags:
+        - Warehouse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseInput"
+            examples:
+              Example 1:
+                value:
+                  name: "New Distribution Center"
+                  location: "Bandung, Indonesia"
+                  capacity: 25000
+      responses:
+        "201":
+          description: Warehouse created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Warehouse"
+              examples:
+                Example 1:
+                  value:
+                    id: "WH003"
+                    name: "New Distribution Center"
+                    location: "Bandung, Indonesia"
+                    capacity: 25000
+                    createdAt: "2024-03-10T09:15:00Z"
+
+  /warehouses/{warehouseId}:
+    get:
+      summary: Get warehouse by ID
+      operationId: getWarehouse
+      tags:
+        - Warehouse
+      parameters:
+        - name: warehouseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Warehouse details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Warehouse"
+              examples:
+                Example 1:
+                  value:
+                    id: "WH001"
+                    name: "Main Warehouse"
+                    location: "Jakarta, Indonesia"
+                    capacity: 50000
+                    createdAt: "2024-01-15T10:30:00Z"
+        "404":
+          description: Warehouse not found
+    put:
+      summary: Update warehouse
+      operationId: updateWarehouse
+      tags:
+        - Warehouse
+      parameters:
+        - name: warehouseId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseInput"
+            examples:
+              Example 1:
+                value:
+                  name: "Main Warehouse Updated"
+                  location: "Jakarta, Indonesia"
+                  capacity: 55000
+      responses:
+        "200":
+          description: Warehouse updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Warehouse"
+              examples:
+                Example 1:
+                  value:
+                    id: "WH001"
+                    name: "Main Warehouse Updated"
+                    location: "Jakarta, Indonesia"
+                    capacity: 55000
+                    createdAt: "2024-01-15T10:30:00Z"
+    delete:
+      summary: Delete warehouse
+      operationId: deleteWarehouse
+      tags:
+        - Warehouse
+      parameters:
+        - name: warehouseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Warehouse deleted successfully
+
+  /products:
+    get:
+      summary: List all products
+      operationId: listProducts
+      tags:
+        - Product
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+              examples:
+                Example 1:
+                  value:
+                    - id: "PROD001"
+                      name: "Laptop Dell XPS 13"
+                      sku: "DELL-XPS-001"
+                      weight: 1.5
+                      description: "High performance laptop"
+                      price: 15000000
+                      createdAt: "2024-01-10T08:00:00Z"
+                    - id: "PROD002"
+                      name: "Mechanical Keyboard"
+                      sku: "MECH-KB-001"
+                      weight: 0.8
+                      description: "RGB Mechanical Keyboard"
+                      price: 1200000
+                      createdAt: "2024-01-12T11:20:00Z"
+    post:
+      summary: Create a new product
+      operationId: createProduct
+      tags:
+        - Product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+            examples:
+              Example 1:
+                value:
+                  name: "USB-C Cable"
+                  sku: "USB-C-001"
+                  weight: 0.05
+                  description: "High speed USB-C cable"
+                  price: 150000
+      responses:
+        "201":
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                Example 1:
+                  value:
+                    id: "PROD003"
+                    name: "USB-C Cable"
+                    sku: "USB-C-001"
+                    weight: 0.05
+                    description: "High speed USB-C cable"
+                    price: 150000
+                    createdAt: "2024-03-05T13:45:00Z"
+
+  /products/{productId}:
+    get:
+      summary: Get product by ID
+      operationId: getProduct
+      tags:
+        - Product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                Example 1:
+                  value:
+                    id: "PROD001"
+                    name: "Laptop Dell XPS 13"
+                    sku: "DELL-XPS-001"
+                    weight: 1.5
+                    description: "High performance laptop"
+                    price: 15000000
+                    createdAt: "2024-01-10T08:00:00Z"
+        "404":
+          description: Product not found
+    put:
+      summary: Update product
+      operationId: updateProduct
+      tags:
+        - Product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+            examples:
+              Example 1:
+                value:
+                  name: "Laptop Dell XPS 13"
+                  sku: "DELL-XPS-001"
+                  weight: 1.5
+                  description: "High performance laptop - Updated"
+                  price: 14500000
+      responses:
+        "200":
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                Example 1:
+                  value:
+                    id: "PROD001"
+                    name: "Laptop Dell XPS 13"
+                    sku: "DELL-XPS-001"
+                    weight: 1.5
+                    description: "High performance laptop - Updated"
+                    price: 14500000
+                    createdAt: "2024-01-10T08:00:00Z"
+    delete:
+      summary: Delete product
+      operationId: deleteProduct
+      tags:
+        - Product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Product deleted successfully
+
+  /warehouses/{warehouseId}/inventory:
+    get:
+      summary: Get inventory for a warehouse with product details
+      operationId: getWarehouseInventory
+      tags:
+        - Inventory
+      parameters:
+        - name: warehouseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Warehouse inventory with product information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InventoryItem"
+              examples:
+                Example 1:
+                  value:
+                    - inventoryId: "INV001"
+                      warehouseId: "WH001"
+                      quantity: 150
+                      lastUpdated: "2024-03-08T16:30:00Z"
+                      product:
+                        id: "PROD001"
+                        name: "Laptop Dell XPS 13"
+                        sku: "DELL-XPS-001"
+                        weight: 1.5
+                        price: 15000000
+                    - inventoryId: "INV002"
+                      warehouseId: "WH001"
+                      quantity: 500
+                      lastUpdated: "2024-03-07T10:15:00Z"
+                      product:
+                        id: "PROD002"
+                        name: "Mechanical Keyboard"
+                        sku: "MECH-KB-001"
+                        weight: 0.8
+                        price: 1200000
+        "404":
+          description: Warehouse not found
+
+  /inventory:
+    post:
+      summary: Add stock to warehouse inventory
+      operationId: addInventory
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryInput"
+            examples:
+              Example 1:
+                value:
+                  warehouseId: "WH001"
+                  productId: "PROD003"
+                  quantity: 200
+      responses:
+        "201":
+          description: Inventory added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryRecord"
+              examples:
+                Example 1:
+                  value:
+                    id: "INV003"
+                    warehouseId: "WH001"
+                    productId: "PROD003"
+                    quantity: 200
+                    lastUpdated: "2024-03-09T12:00:00Z"
+
+  /inventory/{inventoryId}:
+    put:
+      summary: Update inventory stock quantity
+      operationId: updateInventory
+      tags:
+        - Inventory
+      parameters:
+        - name: inventoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryUpdateInput"
+            examples:
+              Example 1:
+                value:
+                  quantity: 120
+      responses:
+        "200":
+          description: Inventory updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryRecord"
+              examples:
+                Example 1:
+                  value:
+                    id: "INV001"
+                    warehouseId: "WH001"
+                    productId: "PROD001"
+                    quantity: 120
+                    lastUpdated: "2024-03-09T14:20:00Z"
+    delete:
+      summary: Remove product from warehouse inventory
+      operationId: deleteInventory
+      tags:
+        - Inventory
+      parameters:
+        - name: inventoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Inventory item deleted successfully
+
+components:
+  schemas:
+    Warehouse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+        capacity:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - location
+        - capacity
+
+    WarehouseInput:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        capacity:
+          type: integer
+      required:
+        - name
+        - location
+        - capacity
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        sku:
+          type: string
+        weight:
+          type: number
+          format: double
+        description:
+          type: string
+        price:
+          type: number
+          format: double
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - sku
+        - weight
+        - price
+
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+        sku:
+          type: string
+        weight:
+          type: number
+          format: double
+        description:
+          type: string
+        price:
+          type: number
+          format: double
+      required:
+        - name
+        - sku
+        - weight
+        - price
+
+    InventoryRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        warehouseId:
+          type: string
+        productId:
+          type: string
+        quantity:
+          type: integer
+        lastUpdated:
+          type: string
+          format: date-time
+      required:
+        - id
+        - warehouseId
+        - productId
+        - quantity
+
+    InventoryInput:
+      type: object
+      properties:
+        warehouseId:
+          type: string
+        productId:
+          type: string
+        quantity:
+          type: integer
+      required:
+        - warehouseId
+        - productId
+        - quantity
+
+    InventoryUpdateInput:
+      type: object
+      properties:
+        quantity:
+          type: integer
+      required:
+        - quantity
+
+    InventoryItem:
+      type: object
+      description: Merged model combining inventory and product details
+      properties:
+        inventoryId:
+          type: string
+        warehouseId:
+          type: string
+        quantity:
+          type: integer
+        lastUpdated:
+          type: string
+          format: date-time
+        product:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            sku:
+              type: string
+            weight:
+              type: number
+              format: double
+            price:
+              type: number
+              format: double
+          required:
+            - id
+            - name
+            - sku
+            - weight
+            - price
+      required:
+        - inventoryId
+        - warehouseId
+        - quantity
+        - product
