@@ -57,8 +57,8 @@ jobs:
             <style>body { margin: 0; padding: 0; }</style>
           </head>
           <body>
-            <redoc spec-url='./openapi.yaml'></redoc>
-            <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
+            <redoc spec-url="openapi.yaml"></redoc>
+            <script src="https://cdn.jsdelivr.net/npm/redoc@2/bundles/redoc.standalone.js"></script>
           </body>
           </html>
           EOF
