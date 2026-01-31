@@ -48,18 +48,24 @@ jobs:
 
           # Create index.html
           cat > public/index.html << 'EOF'
-          <!DOCTYPE html>
+          <!doctype html>
           <html>
-          <head>
-            <title>API Documentation</title>
-            <meta charset="utf-8"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>body { margin: 0; padding: 0; }</style>
-          </head>
-          <body>
-            <redoc spec-url="openapi.yaml"></redoc>
-            <script src="https://cdn.jsdelivr.net/npm/redoc@2/bundles/redoc.standalone.js"></script>
-          </body>
+            <head>
+              <title>API Documentation</title>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <style>
+                body { margin: 0; }
+              </style>
+            </head>
+            <body>
+              <script
+                id="api-reference"
+                data-url="openapi.yaml"
+                data-proxy-url="https://proxy.scalar.com"
+                src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"
+              ></script>
+            </body>
           </html>
           EOF
 
