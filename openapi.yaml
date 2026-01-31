@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Warehouse Management API
   description: API for managing warehouses, products, and inventory
-  version: 1.0.0
+  version: 1.0.1
 
 servers:
   - url: https://api.warehouse.local/v1
