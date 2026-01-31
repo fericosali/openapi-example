@@ -12,7 +12,7 @@ acac
 ffc
 ccscsaa
 caca
-cc
+ccc
 aa
 aa
 caca
